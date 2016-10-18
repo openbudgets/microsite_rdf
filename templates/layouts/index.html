@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<body>
+  <ul>
+    {% for elem in data %}
+      <li> <a href="{{ elem.next_link }}"> {{ elem.uri }} </a> </li>
+    {% endfor %}
+  </ul>
+</body>
+
+<footer>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+  <script type="text/javascript">
+    var data = {{data | safe}};
+  </script>
+
+</footer>
+</html>
