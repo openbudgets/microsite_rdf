@@ -1,0 +1,12 @@
+SELECT DISTINCT ?p
+WHERE {
+  ?s ?p ?o .
+  FILTER (CONTAINS(STR(?p), "dimension") &&
+          CONTAINS(STR(?s), {% city %}))
+} ORDER BY ASC (UCASE (str(?s)))
+LIMIT 50
+
+
+# select dimensions that belong to some given city
+# usage: python3 sparql.py dimensions-of-city.rq \"bonn\"
+# backslashes are used to escape double quotes in the bash interpreter

@@ -1,0 +1,8 @@
+# select all subject-object pairs that are linked by a obeu-measure:amount property
+PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
+SELECT ?s ?o
+FROM <http://data.openbudgets.eu/resource/datasets/aragon-expenditure-2007>
+WHERE { 
+  ?s obeu-measure:amount ?o
+}
+LIMIT 20

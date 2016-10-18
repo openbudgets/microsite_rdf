@@ -1,0 +1,11 @@
+PREFIX qb:<http://purl.org/linked-data/cube#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obeu-dimension:<http://data.openbudgets.eu/ontology/dsd/dimension/>
+SELECT ?dataset ?name ?year
+WHERE {
+  graph ?dataset {} .
+  ?dataset a qb:DataSet .
+  ?dataset rdfs:label ?name .
+  ?dataset obeu-dimension:fiscalYear ?year
+}

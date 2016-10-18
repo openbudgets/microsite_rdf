@@ -1,0 +1,26 @@
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+SELECT DISTINCT ?s ?p ?dim
+WHERE {
+  {
+    ?s ?p ?dim .
+    FILTER (?p = skos:broader)
+    FILTER (CONTAINS (STR(?s), {% city %}))
+  }
+  UNION
+  {
+    ?dim ?p ?s .
+    FILTER (?p = skos:narrower)
+    FILTER (CONTAINS (STR(?s), {% city %}))
+  }
+}
+#LIMIT 50
+
+
+# select dimensions that:
+#    - have a broader dimension which is the given one
+#    - contain a given city in its name
+#  OR
+#    - is a narrower dimension of the given dimension
+#    - contain a given city in its name
+# usage: python3 sparql.py file.rq <dimension-URI> \"cityname\"
+# backslashes are used to escape double quotes in the bash interpreter

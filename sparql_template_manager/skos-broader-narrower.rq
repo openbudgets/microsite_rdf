@@ -1,0 +1,21 @@
+PREFIX qb:<http://purl.org/linked-data/cube#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+SELECT COUNT(DISTINCT ?p)
+WHERE {
+  ?s ?p ?o .
+  FILTER (CONTAINS(STR(?p), "dimension") && CONTAINS(STR(?s), "bonn")) .
+  FILTER NOT EXISTS {
+    ?s skos:broader ?o
+  } .
+  FILTER NOT EXISTS {
+    ?s2 skos:narrower ?s
+  }
+}
+LIMIT 50
+
+# select dimensions that:
+#    - contain the words "aragon";
+#    - have no broader dimensions
+#    - is not a narrower dimension of any other
+#    (so they should be top-level dimensions, right?)

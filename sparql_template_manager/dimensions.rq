@@ -1,0 +1,9 @@
+PREFIX qb:<http://purl.org/linked-data/cube#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?s
+FROM <http://data.openbudgets.eu/resource/datasets/aragon-expenditure-2007>
+WHERE {
+  ?s rdf:type qb:DimensionProperty
+}
+
+# select everything that is of type qb:DimensionProperty

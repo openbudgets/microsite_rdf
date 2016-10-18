@@ -1,0 +1,9 @@
+SELECT ?s ?p ?o
+FROM <http://data.openbudgets.eu/resource/datasets/aragon-expenditure-2007>
+WHERE {
+    ?s ?p ?o .
+    Filter (Abs(?o))
+}
+LIMIT 100
+
+# select all triplets where the object is a number (a valid argument for the Abs function)

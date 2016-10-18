@@ -1,0 +1,6 @@
+# select all existing properties in the triplestore
+SELECT DISTINCT ?p
+WHERE {
+    ?s ?p ?o
+}
+LIMIT 10

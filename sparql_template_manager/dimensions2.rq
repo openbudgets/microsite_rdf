@@ -1,0 +1,10 @@
+SELECT DISTINCT ?p
+FROM <http://data.openbudgets.eu/resource/datasets/aragon-expenditure-2007>
+WHERE {
+  ?s ?p ?o .
+  FILTER (CONTAINS(STR(?s), "observation") &&
+          CONTAINS(STR(?p), "dimension"))
+} ORDER BY ASC (UCASE (str(?s)))
+LIMIT 50
+
+# select dimensions of observations

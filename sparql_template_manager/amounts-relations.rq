@@ -1,0 +1,12 @@
+PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
+SELECT ?s1 ?o ?s2 ?p
+FROM <http://data.openbudgets.eu/resource/datasets/aragon-expenditure-2007>
+WHERE { 
+  ?s1 obeu-measure:amount ?o .
+  ?s2 ?p ?o .
+  FILTER(?s1 != ?s2)
+}
+LIMIT 5
+
+# select all subject-object pairs that are linked by a obeu-measure:amount property
+# and gather their relations to other subjects
