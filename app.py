@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from sparql_template_manager.sparql import STM
+from rdf_utils.stm import STM
 
 app = Flask(__name__)
 app.debug = True
@@ -12,7 +12,7 @@ def double_quote(string):
 @app.route('/')
 def index():
     city = double_quote('aragon')
-    resp = STM.get_data('sparql_template_manager/top-dimensions-of-city.rq', [city])
+    resp = STM.get_data('rdf_utils/queries/top-dimensions-of-city.rq', [city])
     dimensions = STM.predicates_list(resp)
     links = [STM.next_link(city, d) for d in dimensions]
     return render_template('layouts/index.html',
@@ -26,7 +26,7 @@ def index():
 @app.route('/<city>/<path:dimension>')
 def specific_dimension(city, dimension):
     city = double_quote(city)
-    resp = STM.get_data('sparql_template_manager/specific-dimensions.rq',
+    resp = STM.get_data('rdf_utils/queries/specific-dimensions.rq',
                         [dimension, city, dimension, city])
     dimensions = STM.predicates_list(resp)
 
