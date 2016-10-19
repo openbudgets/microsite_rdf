@@ -13,14 +13,14 @@ WHERE {
     FILTER (CONTAINS (STR(?s), {% city %}))
   }
 }
-#LIMIT 50
+# LIMIT 50
 
 
 # select dimensions that:
-#    - have a broader dimension which is the given one
+#    - have a broader dimension
 #    - contain a given city in its name
 #  OR
-#    - is a narrower dimension of the given dimension
+#    - have a narrower dimension
 #    - contain a given city in its name
 # usage: python3 sparql.py file.rq <dimension-URI> \"cityname\"
 # backslashes are used to escape double quotes in the bash interpreter
