@@ -5,7 +5,7 @@ import urllib
 import requests
 
 
-class STM(object):
+class STM(object):  # SPARQL Template Manager
     @staticmethod
     def get_subject(elem):
         return elem['s']['value']
@@ -36,11 +36,12 @@ class STM(object):
         """
         Take a SPARQL query and execute it against the HTTP SPARQL endpoint
         :param query: valid SPARQL query
-        :return: json-ified response from the server or None if there were errors
-                 handling the request
+        :return: json-ified response from the server or None if there were
+                 errors handling the request
         """
         query = urllib.parse.quote_plus(query)
-        #api = 'http://eis-openbudgets.iais.fraunhofer.de/fuseki/sparql?query=%s'
+        # api = \
+        #     'http://eis-openbudgets.iais.fraunhofer.de/fuseki/sparql?query=%s'
         api = 'http://eis-openbudgets.iais.fraunhofer.de/virtuoso/sparql?' \
               'format=json&query=%s'
         response = requests.get(api % query)
@@ -72,9 +73,9 @@ class STM(object):
         if vars_list:
             sparql_query = STM.insert_variables(sparql_query, vars_list)
 
-        print(sparql_query)
+        # print(sparql_query)
         output = STM.execute_query(sparql_query)
-        STM.pretty_print(output)
+        # STM.pretty_print(output)
         return output
 
     @staticmethod
