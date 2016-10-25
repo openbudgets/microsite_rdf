@@ -5,6 +5,8 @@
     + build graph
     + find root nodes
     - start traversing somehow with each HTTP request
+- add tests to the STM class
+- add tests to the OBEUGraph class
 - check why all "specific dimensions" queries return empty stuff. There's
   something useful in exploring.rq
 - build middleware to handle requests from the webapp through the scripts that

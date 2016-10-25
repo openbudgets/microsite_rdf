@@ -13,8 +13,7 @@ class OBEUGraph(nx.DiGraph):
         :return: None
         """
         self.city = '"{}"'.format(city)
-        response = STM.get_data(query_file,
-                                [self.city, self.city])
+        response = STM.get_data(query_file, [self.city, self.city])
 
         # add edge from u to v if u is a broader property of v or v is a
         # narrower property of u
@@ -44,7 +43,7 @@ class OBEUGraph(nx.DiGraph):
 
 if __name__ == '__main__':
     g = OBEUGraph()
-    g.add_obeu_edges(city='bonn', query_file='queries/dimensions-of-city.rq')
+    g.add_obeu_edges(city='bonn', query_file='queries/exploring.rq')
     # get graph roots because they're top level dimensions of this city
     top_dimensions = g.root_nodes()
     pass

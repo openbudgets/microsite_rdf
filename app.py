@@ -9,12 +9,25 @@ def double_quote(string):
     return '"{}"'.format(string)
 
 
+def next_link(city, dimension):
+    """
+    Produce a valid link to get deeper into the hierarchy of a city's
+    dimensions
+    :param city: (string) name of the city
+    :param dimension: (string) URI of a dimension of the city
+    :return: (string) a link for redirection purposes
+    """
+    return 'http://localhost:5000/{city}/{dimension}' \
+        .format(city=city.replace('"', ''),
+                dimension='<{}>'.format(dimension))
+
+
 @app.route('/')
 def index():
     city = double_quote('aragon')
     resp = STM.get_data('rdf_utils/queries/top-dimensions-of-city.rq', [city])
     dimensions = STM.predicates_list(resp)
-    links = [STM.next_link(city, d) for d in dimensions]
+    links = [next_link(city, d) for d in dimensions]
     return render_template('layouts/index.html',
                            data=[
                                {'uri': uri, 'next_link': next_link}
@@ -38,7 +51,7 @@ def specific_dimension(city, dimension):
                                data={'error': 'Transactions data coming soon!'})
 
     # we still have some more nodes to explore
-    links = [STM.next_link(city, double_quote(d)) for d in dimensions]
+    links = [next_link(city, double_quote(d)) for d in dimensions]
     return render_template('layouts/index.html',
                            data=[
                                {'uri': uri, 'next_link': next_link}

@@ -7,29 +7,43 @@ import requests
 
 class STM(object):  # SPARQL Template Manager
     @staticmethod
-    def get_subject(elem):
-        return elem['s']['value']
-
-    @staticmethod
-    def get_predicate(elem):
-        return elem['p']['value']
-
-    @staticmethod
-    def get_object(elem):
-        return elem['o']['value']
-
-    @staticmethod
-    def collect_amounts(_list):
-        return \
-            [
-                (STM.get_subject(elem), STM.get_predicate(elem),
-                 STM.get_object(elem))
-                for elem in _list
-            ]
+    def get_predicate(elem, predicate):
+        return elem[predicate]['value']
 
     @staticmethod
     def pretty_print(result):
         print(json.dumps(result, indent=2, sort_keys=True))
+
+    @staticmethod
+    def parse_response(response, s, p, o):
+        """
+        Parse response from get_data() into dictionaries of triples
+        :param response: response from method get_data
+        :param s: (string) variable used as subject in the query
+        :param p: (string) variable used as predicate in the query
+        :param o: (string) variable used as object in the query
+        :return: list of dictionaries containing all triples inside the response
+        """
+        return list(STM.parse_response_gen(response, s, p, o))
+
+    @staticmethod
+    def parse_response_gen(response, s, p, o):
+        """
+        Parse response from get_data() into dictionaries of triples
+        :param response: response from method get_data
+        :param s: (string) variable used as subject in the query
+        :param p: (string) variable used as predicate in the query
+        :param o: (string) variable used as object in the query
+        :return: generator producing dictionaries containing all triples inside
+                 the response
+        """
+        return (
+            {s: elem[s]['value'],
+             p: elem[p]['value'],
+             o: elem[o]['value']
+             }
+            for elem in response['results']['bindings']
+        )
 
     @staticmethod
     def execute_query(query):
@@ -68,6 +82,15 @@ class STM(object):  # SPARQL Template Manager
 
     @staticmethod
     def get_data(filename, vars_list=None):
+        """
+        Take the string from an .rq file, insert variables where the template
+        tags are located and get the result of executing this completed query
+        :param filename: (string) name of the .rq file containing a SPARQL query
+                         with template tags to be substituted
+        :param vars_list: ([strings]) list of variables names to be inserted
+                          into the query
+        :return: dictionary with results
+        """
         sparql_query = ''.join(open(filename, 'r').readlines())
 
         if vars_list:
@@ -80,17 +103,16 @@ class STM(object):  # SPARQL Template Manager
 
     @staticmethod
     def predicates_list(response):
+        """
+        Grab all predicates indicated by 'p' in the response
+        :param response: result of a call to the get_data method
+        :return: list of predicates
+        """
         try:
-            return [STM.get_predicate(e)
+            return [STM.get_predicate(e, 'p')
                     for e in response['results']['bindings']]
         except TypeError:
             return []
-
-    @staticmethod
-    def next_link(city, dimension):
-        return 'http://localhost:5000/{city}/{dimension}'\
-            .format(city=city.replace('"', ''),
-                    dimension='<{}>'.format(dimension))
 
 
 if __name__ == '__main__':
