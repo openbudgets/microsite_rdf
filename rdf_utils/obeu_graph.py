@@ -43,7 +43,7 @@ class OBEUGraph(nx.DiGraph):
 
 if __name__ == '__main__':
     g = OBEUGraph()
-    g.add_obeu_edges(city='bonn', query_file='queries/exploring.rq')
+    g.add_obeu_edges(city='bonn', query_file='queries/dimensions-hierarchy.rq')
     # get graph roots because they're top level dimensions of this city
     top_dimensions = g.root_nodes()
     pass

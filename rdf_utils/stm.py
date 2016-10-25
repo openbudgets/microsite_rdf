@@ -116,4 +116,5 @@ class STM(object):  # SPARQL Template Manager
 
 
 if __name__ == '__main__':
-    STM.get_data(sys.argv[1], sys.argv[2:])
+    output = STM.get_data(sys.argv[1], sys.argv[2:])
+    STM.pretty_print(output)
