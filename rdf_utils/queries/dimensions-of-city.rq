@@ -3,24 +3,23 @@ SELECT DISTINCT ?s ?p ?dim
 WHERE {
   {
     ?s ?p ?dim .
-    FILTER (?p = skos:broader)
+    FILTER (?p = skos:broader) .
     FILTER (CONTAINS (STR(?s), {% city %}))
   }
   UNION
   {
     ?dim ?p ?s .
-    FILTER (?p = skos:narrower)
+    FILTER (?p = skos:narrower) .
     FILTER (CONTAINS (STR(?s), {% city %}))
   }
 }
-# LIMIT 50
 
 
 # select dimensions that:
-#    - have a broader dimension
-#    - contain a given city in its name
+#    - have a broader dimension which is the given one
+#    - contain a given city in its nane
 #  OR
-#    - have a narrower dimension
+#    - is a narrower dimension of the given dimension
 #    - contain a given city in its name
-# usage: python3 sparql.py file.rq <dimension-URI> \"cityname\"
+# usage: python3 stm.py file.rq \"cityname\" \"cityname\"
 # backslashes are used to escape double quotes in the bash interpreter

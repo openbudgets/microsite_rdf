@@ -1,0 +1,10 @@
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+PREFIX qb:<http://purl.org/linked-data/cube#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?p ?o
+WHERE {
+  ?s ?p ?o .
+  ?s rdf:type qb:Observation .
+  FILTER (CONTAINS (STR(?s), {% city %})) .
+  FILTER (CONTAINS (STR(?p), "dimension"))
+}
