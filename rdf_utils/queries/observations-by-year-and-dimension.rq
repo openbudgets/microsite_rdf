@@ -12,6 +12,6 @@ WHERE {
   ?observation obeu-measure:amount ?amount .
   ?observation ?p ?adm_class .
 
-  filter(contains(str(?p), "administrativeClassification")) .
+  filter(contains(str(?p), "Classification")) .
 }
 GROUP BY ?year ?adm_class

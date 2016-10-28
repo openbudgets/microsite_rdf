@@ -1,0 +1,22 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qb:<http://purl.org/linked-data/cube#>
+PREFIX obeu-dimension: <http://data.openbudgets.eu/ontology/dsd/dimension/>
+PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
+SELECT ?observation ?abstract_class ?concrete_class
+WHERE {
+  # take a ?dataset from some city and year
+  ?dataset a qb:DataSet .
+  ?dataset obeu-dimension:organization <http://dbpedia.org/resource/{% city %}> .
+  ?dataset obeu-dimension:fiscalYear <http://reference.data.gov.uk/id/year/{% year %}> .
+
+  # get ?observations from the ?dataset, with their ?amounts and classes
+  ?observation a qb:Observation .
+  ?observation qb:dataSet ?dataset .
+  ?observation obeu-measure:amount ?amount .
+  ?observation ?abstract_class ?concrete_class .
+
+  # make sure the abstract class is always a valid property
+  ?abstract_class rdf:type rdf:Property .
+  ?abstract_class rdf:type qb:DimensionProperty .
+  ?abstract_class rdf:type qb:CodedProperty .
+}
