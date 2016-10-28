@@ -96,7 +96,7 @@ class STM(object):  # SPARQL Template Manager
         if vars_list:
             sparql_query = STM.insert_variables(sparql_query, vars_list)
 
-        # print(sparql_query)
+        print(sparql_query)
         output = STM.execute_query(sparql_query)
         # STM.pretty_print(output)
         return output

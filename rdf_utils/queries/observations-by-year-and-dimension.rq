@@ -1,0 +1,17 @@
+PREFIX qb:<http://purl.org/linked-data/cube#>
+PREFIX obeu-dimension: <http://data.openbudgets.eu/ontology/dsd/dimension/>
+PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
+SELECT ?year ?adm_class SUM(?amount)
+WHERE {
+  ?dataset a qb:DataSet .
+  ?dataset obeu-dimension:organization <http://dbpedia.org/resource/{% city %}> .
+  ?dataset obeu-dimension:fiscalYear ?year .
+
+  ?observation a qb:Observation .
+  ?observation qb:dataSet ?dataset .
+  ?observation obeu-measure:amount ?amount .
+  ?observation ?p ?adm_class .
+
+  filter(contains(str(?p), "administrativeClassification")) .
+}
+GROUP BY ?year ?adm_class

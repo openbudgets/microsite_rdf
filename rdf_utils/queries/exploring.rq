@@ -1,17 +1,19 @@
-PREFIX qb:<http://purl.org/linked-data/cube#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX obeu-dimension: <http://data.openbudgets.eu/ontology/dsd/dimension/>
 PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
-SELECT ?year ?adm_class SUM(?amount)
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT ?observation ?amount ?abstract_class ?concrete_class
 WHERE {
   ?dataset a qb:DataSet .
-  ?dataset obeu-dimension:organization <http://dbpedia.org/resource/{% ?city %}> .
-  ?dataset obeu-dimension:fiscalYear ?year .
+  ?dataset obeu-dimension:organization <http://dbpedia.org/resource/{% city %}> .
+  ?dataset obeu-dimension:fiscalYear <http://reference.data.gov.uk/id/year/{% year %}> .
 
   ?observation a qb:Observation .
   ?observation qb:dataSet ?dataset .
   ?observation obeu-measure:amount ?amount .
-  ?observation ?p ?adm_class .
+  ?observation ?abstract_class ?concrete_class .
 
-  filter(contains(str(?p), "administrativeClassification")) .
+  filter(contains(str(?abstract_class), "functionalClassification")) .
 }
-GROUP BY ?year ?adm_class
+LIMIT 10
