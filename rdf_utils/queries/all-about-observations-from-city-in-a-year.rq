@@ -2,7 +2,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX qb:<http://purl.org/linked-data/cube#>
 PREFIX obeu-dimension: <http://data.openbudgets.eu/ontology/dsd/dimension/>
 PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
-SELECT ?observation ?abstract_class ?concrete_class
+SELECT DISTINCT ?observation ?amount ?abstract_class ?concrete_class
 WHERE {
   # take a ?dataset from some city and year
   ?dataset a qb:DataSet .
