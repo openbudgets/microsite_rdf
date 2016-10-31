@@ -71,8 +71,8 @@ if __name__ == '__main__':
     g = OBEUGraph()
     g.add_obeu_observation_edges(
         city='Aragon',
-        year='2016',
+        year='2015',
         query_file='queries/all-about-observations-from-city-in-a-year.rq')
     # get graph roots because they're top level dimensions of this city
     top_dimensions = g.root_nodes()
-    pass
+    pass  # this is not a mistake, here goes a breakpoint in PyCharm ;)
