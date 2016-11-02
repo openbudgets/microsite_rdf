@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
+  <link type="text/css" rel="stylesheet" href="http://visjs.org/dist/vis.css">
+  <style type="text/css">
+    #mynetwork {
+      width: 800px;
+      height: 800px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+
+<body>
+<div id="mynetwork"></div>
+</body>
+
+<footer>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript">
+    var data = {{data | safe}};
+    var network;
+
+    function redrawAll() {
+      // create a network
+      var container = document.getElementById('mynetwork');
+      var options = {
+        nodes: {
+          shape: 'dot',
+          scaling: {
+            min: 10,
+            max: 30
+          },
+          font: {
+            size: 12,
+            face: 'Tahoma'
+          }
+        },
+        edges: {
+          width: 0.15,
+          color: {inherit: 'from'},
+          smooth: {
+            type: 'continuous'
+          }
+        },
+        physics: {
+          stabilization: false,
+          barnesHut: {
+            gravitationalConstant: -80000,
+            springConstant: 0.001,
+            springLength: 200
+          }
+        },
+        interaction: {
+          tooltipDelay: 100,
+          hideEdgesOnDrag: true
+        },
+        layout: {
+            improvedLayout: false
+        }
+      };
+      network = new vis.Network(container, data, options);
+    }
+
+    redrawAll();
+  </script>
+</footer>
+</html>
