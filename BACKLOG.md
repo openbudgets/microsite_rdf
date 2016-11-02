@@ -7,6 +7,7 @@
   + label them as transactions to differentiate them from dimensions
   + connect them to their respective dimensions
 + build "deeper" dimensions route in flask app
-- aggregate amounts on concrete classes and propagate to abstract classes
++ aggregate amounts on concrete classes and propagate to abstract classes
++ plot something with visjs
 - build web application to navigate the levels
     - add city selector
