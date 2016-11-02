@@ -1,29 +1,37 @@
 from flask import Flask, render_template
 from rdf_utils.stm import STM
+from rdf_utils.obeu_graph import OBEUGraph
+from utils import double_quote, next_link
 
 app = Flask(__name__)
 app.debug = True
 
 
-def double_quote(string):
-    return '"{}"'.format(string)
+@app.route('/<city>/<year>')
+def index(city, year):
+    g = OBEUGraph()
+    g.add_obeu_observation_edges(
+        city=city,
+        year=year,
+        query_file='/home/piero/Documents/fraunhofer/obeu-explorer/rdf_utils/queries/'
+                   'all-about-observations-from-city-in-a-year.rq')
+    data = {'nodes': [], 'edges': []}
+
+    for node_id in g.node:
+        data['nodes'].append({
+            'id': node_id,
+            'label': '',  # is it sane to use the URI (node_id) as label?
+            'title': 'Amount (€): {}'.format(g.node[node_id]['amount']),
+        })
+
+    for edge in g.edges():
+        data['edges'].append({'from': edge[0], 'to': edge[1]})
+
+    return render_template('layouts/city_year_graph.html', data=data)
 
 
-def next_link(city, dimension):
-    """
-    Produce a valid link to get deeper into the hierarchy of a city's
-    dimensions
-    :param city: (string) name of the city
-    :param dimension: (string) URI of a dimension of the city
-    :return: (string) a link for redirection purposes
-    """
-    return 'http://localhost:5000/{city}/{dimension}' \
-        .format(city=city.replace('"', ''),
-                dimension='<{}>'.format(dimension))
-
-
-@app.route('/')
-def index():
+@app.route('/old-index')
+def old_index():
     city = double_quote('aragon')
     resp = STM.get_data('rdf_utils/queries/top-dimensions-of-city.rq', [city])
     dimensions = STM.predicates_list(resp)
