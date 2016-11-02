@@ -1,5 +1,6 @@
+import matplotlib.pyplot as plt
 import networkx as nx
-from stm import STM
+from rdf_utils.stm import STM
 
 
 class OBEUGraph(nx.DiGraph):
@@ -21,13 +22,27 @@ class OBEUGraph(nx.DiGraph):
         response = STM.get_data(query_file, [city, year])
 
         for elem in response['results']['bindings']:
-            self.add_edge(elem['abstract_class']['value'],
-                          elem['concrete_class']['value'])
-            self.add_edge(elem['concrete_class']['value'],
-                          elem['observation']['value'])
+            observation = elem['observation']['value']
+            abstract_class = elem['abstract_class']['value']
+            concrete_class = elem['concrete_class']['value']
+            amount = elem['amount']['value']
 
-            self.node[elem['observation']['value']]['amount'] = \
-                float(elem['amount']['value'])
+            self.add_edge(abstract_class, concrete_class)
+            self.add_edge(concrete_class, observation)
+            self.node[observation]['amount'] = float(amount)
+            if self.node[concrete_class].get('amount'):
+                self.node[concrete_class]['amount'] += \
+                    self.node[observation]['amount']
+            else:
+                self.node[concrete_class]['amount'] = \
+                    self.node[observation]['amount']
+            if self.node[abstract_class].get('amount'):
+                self.node[abstract_class]['amount'] += \
+                    self.node[concrete_class]['amount']
+            else:
+                self.node[abstract_class]['amount'] = \
+                    self.node[concrete_class]['amount']
+
 
     def add_obeu_dimension_edges(self, city, query_file):
         """
@@ -73,6 +88,9 @@ if __name__ == '__main__':
         city='Aragon',
         year='2015',
         query_file='queries/all-about-observations-from-city-in-a-year.rq')
-    # get graph roots because they're top level dimensions of this city
-    top_dimensions = g.root_nodes()
+
+    # nx.draw(g)
+    # plt.savefig('observations-hierarchy-graph.png')
+    # plt.show()
+
     pass  # this is not a mistake, here goes a breakpoint in PyCharm ;)
