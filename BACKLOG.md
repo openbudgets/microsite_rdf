@@ -9,5 +9,12 @@
 + build "deeper" dimensions route in flask app
 + aggregate amounts on concrete classes and propagate to abstract classes
 + plot something with visjs
++ only load classes nodes
+- when one of those classes is clicked it could add nodes of observations
+  corresponding to that particular class
+- color things differently (one color for each category, maybe based on some
+  classification the user selects? for exm, the adm classification is selected,
+  then everything takes a diff color, depending on its category in that class)
 - build web application to navigate the levels
     - add city selector
+    - add year selector

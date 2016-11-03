@@ -22,6 +22,7 @@ def index(city, year):
             'id': node_id,
             'label': '',  # is it sane to use the URI (node_id) as label?
             'title': 'Amount (€): {}'.format(g.node[node_id]['amount']),
+            'group': g.node[node_id]['group']
         })
 
     for edge in g.edges():

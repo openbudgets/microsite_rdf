@@ -29,6 +29,9 @@ class OBEUGraph(nx.DiGraph):
 
             self.add_edge(abstract_class, concrete_class)
             self.add_edge(concrete_class, observation)
+            self.node[abstract_class]['group'] = 'abstract_class'
+            self.node[concrete_class]['group'] = 'concrete_class'
+            self.node[observation]['group'] = 'observation'
             self.node[observation]['amount'] = float(amount)
             if self.node[concrete_class].get('amount'):
                 self.node[concrete_class]['amount'] += \

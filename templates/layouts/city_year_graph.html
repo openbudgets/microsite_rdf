@@ -20,7 +20,11 @@
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script type="text/javascript">
-    var data = {{data | safe}};
+    var original_data = {{data | safe}};
+    data = {nodes:original_data.nodes, edges: original_data.edges};
+    data.nodes = data.nodes.filter(function(node) {
+      return node.group == 'abstract_class' || node.group == 'concrete_class';
+    });
     var network;
 
     function redrawAll() {
@@ -45,10 +49,15 @@
             type: 'continuous'
           }
         },
+        groups: {
+          abstract_class: {color:{background:'red'}, borderWidth:3},
+          concrete_class: {color:{background:'green'}}
+        },
         physics: {
-          stabilization: false,
+          maxVelocity: 3000,
+          minVelocity: 0.1,
           barnesHut: {
-            gravitationalConstant: -80000,
+            gravitationalConstant: -50000,
             springConstant: 0.001,
             springLength: 200
           }
@@ -59,6 +68,12 @@
         },
         layout: {
             improvedLayout: false
+        },
+        configure: {
+          enabled: true,
+          filter: 'physics',
+          container: undefined,
+          showButton: true
         }
       };
       network = new vis.Network(container, data, options);
