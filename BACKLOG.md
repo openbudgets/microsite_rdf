@@ -10,11 +10,14 @@
 + aggregate amounts on concrete classes and propagate to abstract classes
 + plot something with visjs
 + only load classes nodes
++ color things differently (one color for each abstract classification)
++ add labels to the graph presented, trying in this order rdfs:label,
+  skos:prefLabel, skos:altLabel and, finally, the URI if all the others fail
+- build web application to navigate the levels
+    + add city selector (URL)
+    + add year selector (URL)
+    - improve city selector (some HTML element perhaps?)
+    - improve year selector
 - when one of those classes is clicked it could add nodes of observations
   corresponding to that particular class
-- color things differently (one color for each category, maybe based on some
-  classification the user selects? for exm, the adm classification is selected,
-  then everything takes a diff color, depending on its category in that class)
-- build web application to navigate the levels
-    - add city selector
-    - add year selector
+
