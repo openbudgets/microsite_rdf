@@ -18,20 +18,34 @@ class OBEUGraph(nx.DiGraph):
                            to be used
         :return: None
         """
-        amounts = {}
+        group = {}
+        next_group = 0
         response = STM.get_data(query_file, [city, year])
 
         for elem in response['results']['bindings']:
+            amount = elem['amount']['value']
             observation = elem['observation']['value']
             abstract_class = elem['abstract_class']['value']
+            abstract_class_label = elem['abstract_class_label']['value']
             concrete_class = elem['concrete_class']['value']
-            amount = elem['amount']['value']
+            try:
+                concrete_class_label = elem['concrete_class_label']['value']
+            except KeyError:
+                concrete_class_label = concrete_class
 
             self.add_edge(abstract_class, concrete_class)
             self.add_edge(concrete_class, observation)
-            self.node[abstract_class]['group'] = 'abstract_class'
-            self.node[concrete_class]['group'] = 'concrete_class'
+
+            if group.get(abstract_class) is None:
+                group[abstract_class] = next_group
+                next_group += 1
+
+            self.node[abstract_class]['group'] = group[abstract_class]
+            self.node[abstract_class]['label'] = abstract_class_label
+            self.node[concrete_class]['group'] = group[abstract_class]
+            self.node[concrete_class]['label'] = concrete_class_label
             self.node[observation]['group'] = 'observation'
+            self.node[observation]['label'] = observation
             self.node[observation]['amount'] = float(amount)
             if self.node[concrete_class].get('amount'):
                 self.node[concrete_class]['amount'] += \
