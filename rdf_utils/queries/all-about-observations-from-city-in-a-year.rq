@@ -1,8 +1,10 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX qb:<http://purl.org/linked-data/cube#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX obeu-dimension: <http://data.openbudgets.eu/ontology/dsd/dimension/>
 PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
-SELECT DISTINCT ?observation ?amount ?abstract_class ?concrete_class
+SELECT ?observation ?amount ?abstract_class ?abstract_class_label ?concrete_class ?concrete_class_label
 WHERE {
   # take a ?dataset from some city and year
   ?dataset a qb:DataSet .
@@ -19,4 +21,16 @@ WHERE {
   ?abstract_class rdf:type rdf:Property .
   ?abstract_class rdf:type qb:DimensionProperty .
   ?abstract_class rdf:type qb:CodedProperty .
+
+  # look for possible labels of the abstract class
+  # ordering OPTIONAL clauses like this will bind the ?abstract_class_label
+  # variable to the first of the 3 that matches
+  OPTIONAL {?abstract_class rdfs:label ?abstract_class_label .}
+  OPTIONAL {?abstract_class skos:prefLabel ?concrete_class_label .}
+  OPTIONAL {?abstract_class skos:altLabel ?abstract_class_label .}
+
+  # look for possible labels of the concrete class
+  OPTIONAL {?concrete_class rdfs:label ?concrete_class_label .}
+  OPTIONAL {?concrete_class skos:prefLabel ?concrete_class_label .}
+  OPTIONAL {?concrete_class skos:altLabel ?concrete_class_label .}
 }
