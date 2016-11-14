@@ -1,0 +1,22 @@
+<!doctype html>
+<html ng-app="MinimalistOS">
+  <head>
+    <link href="css/babbage.css" rel="stylesheet">
+  </head>
+  <body ng-controller="treeMapCtrl">
+    <tree-map endpoint="{{ apiUrl }}" 
+              cube="{{ cube }}" 
+              state="stateForCharts">
+    </tree-map>
+  </body>
+  <footer>
+    <script type="text/javascript" src="js/d3-3.5.6.min.js"></script>
+    <script type="text/javascript" src="js/c3.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="js/angular1.5.8.js"></script>
+    <script type="text/javascript" src="js/babbage-core.js"></script>
+    <script type="text/javascript" src="js/babbage-vuejs.js"></script>
+    <script type="text/javascript" src="js/babbage-angular.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+  </footer>
+</html>
