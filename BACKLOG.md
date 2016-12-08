@@ -13,6 +13,9 @@
 + color things differently (one color for each abstract classification)
 + add labels to the graph presented, trying in this order rdfs:label,
   skos:prefLabel, skos:altLabel and, finally, the URI if all the others fail
+- join query in exploring.rq with the obeu-graph thing, this way we can build
+  the hierarchy using the function of obeu-edges-dimensions
+- check why some nodes are lost when adding labels
 - build web application to navigate the levels
     + add city selector (URL)
     + add year selector (URL)
@@ -20,4 +23,3 @@
     - improve year selector
 - when one of those classes is clicked it could add nodes of observations
   corresponding to that particular class
-
