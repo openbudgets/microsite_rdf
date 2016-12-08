@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+from itertools import islice
 import networkx as nx
 from rdf_utils.stm import STM
 
@@ -26,12 +26,19 @@ class OBEUGraph(nx.DiGraph):
             amount = elem['amount']['value']
             observation = elem['observation']['value']
             abstract_class = elem['abstract_class']['value']
-            abstract_class_label = elem['abstract_class_label']['value']
             concrete_class = elem['concrete_class']['value']
+
+            # parse labels
             try:
-                concrete_class_label = elem['concrete_class_label']['value']
+                abstract_class_label = elem['abstract_class_label']['value']
+            except KeyError:
+                abstract_class_label = abstract_class
+            try:
+                concrete_class_label = ''# elem['concrete_class_label']['value']
+                concrete_class_prefLabel = elem['concrete_class_prefLabel']['value']
             except KeyError:
                 concrete_class_label = concrete_class
+                concrete_class_prefLabel = concrete_class
 
             self.add_edge(abstract_class, concrete_class)
             self.add_edge(concrete_class, observation)
@@ -40,10 +47,10 @@ class OBEUGraph(nx.DiGraph):
                 group[abstract_class] = next_group
                 next_group += 1
 
-            self.node[abstract_class]['group'] = group[abstract_class]
+            self.node[abstract_class]['group'] = abstract_class
             self.node[abstract_class]['label'] = abstract_class_label
-            self.node[concrete_class]['group'] = group[abstract_class]
-            self.node[concrete_class]['label'] = concrete_class_label
+            self.node[concrete_class]['group'] = abstract_class
+            self.node[concrete_class]['label'] = concrete_class_prefLabel
             self.node[observation]['group'] = 'observation'
             self.node[observation]['label'] = observation
             self.node[observation]['amount'] = float(amount)
@@ -60,27 +67,44 @@ class OBEUGraph(nx.DiGraph):
                 self.node[abstract_class]['amount'] = \
                     self.node[concrete_class]['amount']
 
+        # trick to restrict the amount of shown observations to only 20
+        selected_observations = \
+            islice(filter(lambda x: self.node[x]['group'] == 'observation',
+                          self.nodes_iter()),
+                   None, 20)
 
-    def add_obeu_dimension_edges(self, city, query_file):
+        for observation in selected_observations:
+            self.node[observation]['group'] = 'selected_observations'
+
+    def add_obeu_dimension_edges(self, city, year, query_file):
         """
         Query the SPARQL Template Manager (STM) to add required edges to the
         graph
         :param city: (string) city name
+        :param year: (string) year to be used as filter
         :param query_file: (string) name of the file containing the SPARQL query
                            to be used
         :return: None
         """
-        self.city = '"{}"'.format(city)
-        response = STM.get_data(query_file, [self.city, self.city])
+        response = STM.get_data(query_file, [city, year])
 
         # add edge from u to v if u is a broader property of v or v is a
         # narrower property of u
 
         for elem in response['results']['bindings']:
-            if 'broader' in elem['p']['value']:
-                self.add_edge(elem['dim']['value'], elem['s']['value'])
-            elif 'narrower' in elem['p']['value']:
-                self.add_edge(elem['s']['value'], elem['dim']['value'])
+            broader = elem['broader']['value']
+            narrower = elem['narrower']['value']
+            self.add_edge(broader, narrower)
+            self.node[broader]['label'] = broader
+            self.node[broader]['group'] = 'not specified'
+            self.node[broader]['amount'] = 0 if self.node[broader].get(
+                'amount') is None else self.node[broader]['amount']
+            self.node[narrower]['label'] = narrower
+            self.node[narrower]['group'] = 'not specified'
+            self.node[narrower]['amount'] = 0 if self.node[narrower].get(
+                'amount') is None else self.node[narrower]['amount']
+
+
 
     def root_nodes_gen(self):
         """
@@ -109,5 +133,17 @@ if __name__ == '__main__':
     # nx.draw(g)
     # plt.savefig('observations-hierarchy-graph.png')
     # plt.show()
+
+    g2 = OBEUGraph()
+    g2.add_obeu_observation_edges(
+        city='Aragon',
+        year='2015',
+        query_file='queries/exploring.rq')
+
+    g3 = OBEUGraph()
+    g3.add_obeu_observation_edges(
+        city='Aragon',
+        year='2015',
+        query_file='queries/exploring2.rq')
 
     pass  # this is not a mistake, here goes a breakpoint in PyCharm ;)

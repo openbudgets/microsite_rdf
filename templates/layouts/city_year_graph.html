@@ -46,16 +46,14 @@
         },
         edges: {
           width: 0.15,
-          color: {inherit: 'from'},
+          color: {inherit: 'to'},
           smooth: {
             type: 'continuous'
           }
         },
         physics: {
-          maxVelocity: 3000,
-          minVelocity: 0.1,
           barnesHut: {
-            gravitationalConstant: -20000,
+            gravitationalConstant: -80000,
             springConstant: 0.001,
             springLength: 200
           }

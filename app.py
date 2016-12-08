@@ -15,11 +15,16 @@ def index(city, year):
     :return: render_template() answer
     """
     g = OBEUGraph()
+    # g.add_obeu_dimension_edges(
+    #     city=city,
+    #     year=year,
+    #     query_file='/home/piero/Documents/fraunhofer/obeu-explorer/rdf_utils/queries/'
+    #                'exploring.rq')
     g.add_obeu_observation_edges(
         city=city,
         year=year,
-        query_file='/home/piero/Documents/fraunhofer/obeu-explorer/rdf_utils/queries/'
-                   'all-about-observations-from-city-in-a-year.rq')
+        query_file='/home/piero/Documents/fraunhofer/obeu-explorer/rdf_utils/'
+                   'queries/all-about-observations-from-city-in-a-year.rq')
     data = {'nodes': [], 'edges': []}
 
     # add node data as needed by visjs to help us show some useful graphics

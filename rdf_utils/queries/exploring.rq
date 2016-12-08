@@ -1,19 +1,25 @@
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX obeu-dimension: <http://data.openbudgets.eu/ontology/dsd/dimension/>
-PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-SELECT ?observation ?amount ?abstract_class ?concrete_class
+SELECT DISTINCT ?narrower ?broader
 WHERE {
+  # take a ?dataset from some city and year
   ?dataset a qb:DataSet .
   ?dataset obeu-dimension:organization <http://dbpedia.org/resource/{% city %}> .
   ?dataset obeu-dimension:fiscalYear <http://reference.data.gov.uk/id/year/{% year %}> .
 
+  # get ?observations from the ?dataset, with their classes
   ?observation a qb:Observation .
   ?observation qb:dataSet ?dataset .
-  ?observation obeu-measure:amount ?amount .
-  ?observation ?abstract_class ?concrete_class .
+  ?observation ?abstract_class ?narrower .
 
-  filter(contains(str(?abstract_class), "functionalClassification")) .
+  # get all concrete classes that have relationships to another classes, to
+  # build a hierarchy of broader/narrower
+  {
+    ?narrower skos:broader ?broader .
+  }
+  UNION
+  {
+    ?broader skos:narrower ?narrower .
+  }
 }
-LIMIT 10
